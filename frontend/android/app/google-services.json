@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "502670715253",
+    "project_id": "visualcryptography-c7c85",
+    "storage_bucket": "visualcryptography-c7c85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502670715253:android:cf4b9b1bc984147dbbcb3c",
+        "android_client_info": {
+          "package_name": "com.visualcryptography"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQAR5asAH44iI1HHXpkRWCVYcIXyd7Tc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+String mainApiUrl = dotenv.env['HOSTED_URL'].toString();
+String registerExaminerUrl = '$mainApiUrl/api/examiner/register';
+String loginExaminerUrl = '$mainApiUrl/api/examiner/login';
+String verifyExaminerUrl = '$mainApiUrl/api/examiner/verifyOtp';
+String createStudentMarkUrl = '$mainApiUrl/api/marks/createStudentMark';
+String updateStudentMarkUrl = '$mainApiUrl/api/marks/updateStudentMark';
+String deleteStudentMarkUrl = '$mainApiUrl/api/marks/deleteStudentMark';
+String getStudentMarkByIdUrl = '$mainApiUrl/api/marks/getStudentMarkById';
+String getAllStudentsMarksUrl = '$mainApiUrl/api/marks/getAllStudentsMarks';
