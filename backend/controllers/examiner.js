@@ -21,7 +21,7 @@ exports.otpGenerator = async (req, res) => {
     const { email } = req.body; // Assuming you're getting the email from the request body.
 
     // Generate a new OTP
-    function generateOTP(length) {
+    async function generateOTP(length) {
       const chars = "0123456789";
       let otp = "";
       for (let i = 0; i < length; i++) {
@@ -30,151 +30,20 @@ exports.otpGenerator = async (req, res) => {
       }
       return otp;
     }
-    
-    // Generate a random OTP
-    const otp = "567679";
 
-    // Create a canvas for the image
-    const canvas = createCanvas(350, 350);
-    const context = canvas.getContext("2d");
+   
     
-    // Set the background color
-    context.fillStyle = "#ffffff";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Set the text properties
-    context.fillStyle = "#000000";
-    context.textBaseline = "middle";
-    
-    // Calculate the optimal font size for equal digit width
-    const fontSize = 50; // Adjust 20 as needed for padding
-    
-    // Draw each digit of the OTP with equal size
-    for (let i = 0; i < otp.length; i++) {
-      context.font = `bold ${fontSize}px Arial`;
-      const digit = otp[i];
-      const digitWidth = context.measureText(digit).width;
-      const digitX = (canvas.width - otp.length * digitWidth) / 2 + i * digitWidth;
-      const digitY = canvas.height / 2;
-      context.fillText(digit, digitX, digitY);
-    }
-    
-    // Add random noise lines
-    for (let i = 0; i < 20; i++) {
-      context.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${
-        Math.random() * 255
-      },${Math.random()})`;
-      context.lineWidth = Math.random() * 2;
-      context.beginPath();
-      context.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-      context.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-      context.stroke();
-    }
-    
-    // Add random noise dots
-    for (let i = 0; i < 100; i++) {
-      context.fillStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${
-        Math.random() * 255
-      },${Math.random()})`;
-      context.beginPath();
-      context.arc(
-        Math.random() * canvas.width,
-        Math.random() * canvas.height,
-        Math.random() * 2,
-        0,
-        Math.PI * 2
-      );
-      context.fill();
-    }
-    
-    // Save the canvas as a PNG image
-    const buffer = canvas.toBuffer("image/png");
-    fs.writeFileSync("otp_captcha.png", buffer);
-    
-    
-console.log("OTP image created as otp_captcha.png");
-    const otpImage = await Jimp.read("otp_captcha.png");
+    const otp = await generateOTP(6);
+    await generateOTPImage(otp);
+    // Generate OTP image
+    const shares = await generateShares();
 
-    otpImage.greyscale();
+    const share1Base64 = shares.share1.toString("base64");
 
-    // Convert the image to a matrix of 0s and 255s (0 for black and 255 for white)
-    const imageArray = [];
-    for (let y = 0; y < otpImage.bitmap.height; y++) {
-      const row = [];
-      for (let x = 0; x < otpImage.bitmap.width; x++) {
-        const pixelColor = Jimp.intToRGBA(otpImage.getPixelColor(x, y));
-        const grayscaleValue = (pixelColor.r + pixelColor.g + pixelColor.b) / 3;
-        const binaryValue = grayscaleValue < 128 ? 0 : 255;
-        row.push(binaryValue);
-      }
-      imageArray.push(row);
-    }
-
-    // Create random_matrix_1 by generating random 0s and 255s of the same shape as the image
-    const random_matrix_1 = [];
-    for (let y = 0; y < otpImage.bitmap.height; y++) {
-      const row = [];
-      for (let x = 0; x < otpImage.bitmap.width; x++) {
-        const randomValue = Math.random() < 0.5 ? 0 : 255;
-        row.push(randomValue);
-      }
-      random_matrix_1.push(row);
-    }
-    console.log(random_matrix_1);
-
-    // Create random_matrix_2 by XORing random_matrix_1 with the imageArray
-    const random_matrix_2 = [];
-    for (let y = 0; y < otpImage.bitmap.height; y++) {
-      const row = [];
-      for (let x = 0; x < otpImage.bitmap.width; x++) {
-        const xorValue = random_matrix_1[y][x] ^ imageArray[y][x];
-        row.push(xorValue);
-      }
-      random_matrix_2.push(row);
-    }
-
-    // Create shares
-    const share1Image = new Jimp(imageArray[0].length, imageArray.length);
-    const share2Image = new Jimp(imageArray[0].length, imageArray.length);
-
-    for (let y = 0; y < otpImage.bitmap.height; y++) {
-      for (let x = 0; x < otpImage.bitmap.width; x++) {
-        share1Image.setPixelColor(
-          Jimp.rgbaToInt(
-            random_matrix_1[y][x],
-            random_matrix_1[y][x],
-            random_matrix_1[y][x],
-            255
-          ),
-          x,
-          y
-        );
-        share2Image.setPixelColor(
-          Jimp.rgbaToInt(
-            random_matrix_2[y][x],
-            random_matrix_2[y][x],
-            random_matrix_2[y][x],
-            255
-          ),
-          x,
-          y
-        );
-      }
-    }
-
-    // Save shares as imagess
-    // share1Image.write("share1.png");
-    // share2Image.write("share2.png");
-
-    const share1Buffer = fs.readFileSync("share1.png");
-    const share1Base64 = share1Buffer.toString("base64");
-    console.log("share1base64 realprint :" , share1Base64);
     console.log("share1Base64 length:", share1Base64.length);
 
     // Check if a user with the provided email exists
     const existingUser = await Examinerdb.findOne({ where: { email: email } });
-    console.log(otp);
-    console.log(otp);
     if (existingUser) {
       // Check if there's an existing OTP record for the same user
       let otpRecord = await OTP.findOne({ where: { userId: existingUser.id } });
@@ -191,7 +60,7 @@ console.log("OTP image created as otp_captcha.png");
           otp: otp,
         });
       }
-      console.log("dtgdgd", email);
+      console.log("Email sent to", email);
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -201,14 +70,20 @@ console.log("OTP image created as otp_captcha.png");
       });
 
       const mailOptions = {
-        from: "pravin.suthar6484@gmail.com", // Sender address
-        to: email, // Recipient address
-        subject: "OTP Verification", // Email subject
-        text: `Your OTP is: ${otp}`, // Email body text
+        from: "pravin.suthar6484@gmail.com", 
+        to: email, 
+        subject: "OTP Verification", 
+        text: `Your OTP is: ${otp}`,
         attachments: [
           {
-            filename: "share2.png", // Name of the attachment
-            path: "share2.png", // Path to the attachment file
+            filename: "share1.png", 
+            content: shares.share1, 
+            contentType: "image/png" 
+          },
+          {
+            filename: "share2.png", 
+            content: shares.share2, 
+            contentType: "image/png" 
           },
         ],
       };
@@ -223,7 +98,7 @@ console.log("OTP image created as otp_captcha.png");
 
       // Send the OTP via email
       //  await sendOtpEmail(email, otp, share2Image);
-      console.log(otp);
+      console.log("Otp sent to the email is ", otp);
       res.status(200).json({
         success: true,
         message: "OTP sent to your email",

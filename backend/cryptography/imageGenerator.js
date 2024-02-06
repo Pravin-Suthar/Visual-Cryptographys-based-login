@@ -1,12 +1,8 @@
-const Jimp = require("jimp");
-const { createCanvas } = require("canvas");
-const fs = require("fs");
+const { createCanvas, loadImage } = require('canvas');
+const fs = require('fs');
 
-async function generateOTPImage() {
-  // Generate OTP logic (similar to your existing logic)
-  const otp = Math.floor(100000 + Math.random() * 900000);
-
-  const canvas = createCanvas(720, 520);
+async function generateOTPImage(otp) {
+  const canvas = createCanvas(350, 350);
   const context = canvas.getContext("2d");
 
   // Set the background color
@@ -17,26 +13,22 @@ async function generateOTPImage() {
   context.fillStyle = "#000000";
   context.textBaseline = "middle";
 
-  // Apply a rotation to make the text look "crooked"
-  const angle = Math.random() * 0.1 - 0.05; // Random rotation angle
-  context.setTransform(1, angle, 0, 1, 0, 0);
+  // Calculate the optimal font size for equal digit width
+  const fontSize = 50; // Adjust 20 as needed for padding
 
-  // Draw each digit of the OTP with a random size
+  // Draw each digit of the OTP with equal size
   for (let i = 0; i < otp.length; i++) {
-    const randomFontSize = Math.floor(Math.random() * 80) + 56; // Random font size between 48 and 84
-    context.font = `bold ${randomFontSize}px Arial`;
+    context.font = `bold ${fontSize}px Arial`;
     const digit = otp[i];
     const digitWidth = context.measureText(digit).width;
-    const digitX =
-      (canvas.width - otp.length * digitWidth) / 2 + i * digitWidth;
+    const digitX = (canvas.width - otp.length * digitWidth) / 2 + i * digitWidth;
     const digitY = canvas.height / 2;
     context.fillText(digit, digitX, digitY);
   }
+
   // Add random noise lines
   for (let i = 0; i < 20; i++) {
-    context.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${
-      Math.random() * 255
-    },${Math.random()})`;
+    context.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},${Math.random()})`;
     context.lineWidth = Math.random() * 2;
     context.beginPath();
     context.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
@@ -46,9 +38,7 @@ async function generateOTPImage() {
 
   // Add random noise dots
   for (let i = 0; i < 100; i++) {
-    context.fillStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${
-      Math.random() * 255
-    },${Math.random()})`;
+    context.fillStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},${Math.random()})`;
     context.beginPath();
     context.arc(
       Math.random() * canvas.width,
@@ -60,11 +50,9 @@ async function generateOTPImage() {
     context.fill();
   }
 
-  const imageBuffer = canvas.toBuffer("image/png");
-  const otpImage = await Jimp.read(imageBuffer);
-
-  // Return both OTP and the Jimp image
-  return { otp, otpImage };
+  // Save the canvas as a PNG image
+  const buffer = canvas.toBuffer("image/png");
+  fs.writeFileSync("otp_captcha.png", buffer);
 }
 
 module.exports = generateOTPImage;
