@@ -13,11 +13,9 @@ const Examinerdb = db.examiners;
 //const { StudentMarks } = require('../models/marks'); // Import your StudentMarks model here
 
 exports.createStudentMark = async (req, res) => {
-  console.log("aesrdtgfhgdfsds");
   try {
     var { studentId, rollNo, marks, course, examType } = req.body;
     var id = req.params.id;
-    console.log(id);
 
     // Check if a student mark entry with the same roll number already exists
     const existingStudentMark = await StudentMarks.findOne({
@@ -31,7 +29,7 @@ exports.createStudentMark = async (req, res) => {
         message: "Student mark entry with the same roll number already exists.",
       });
     }
-    console.log("Gggggggg");
+
 
     // Create a new student mark entry
     marks = JSON.stringify(marks);
@@ -130,8 +128,7 @@ exports.getStudentMarkById = async (req, res) => {
   try {
     var id = req.body.studentid;
     var examinerid = req.body.examinerid;
-    console.log(id);
-    console.log(examinerid);
+
     // Find the student mark entry by ID
     const studentMark = await StudentMarks.findOne({
       where: {
@@ -139,7 +136,7 @@ exports.getStudentMarkById = async (req, res) => {
         rollNo: id, // 'id' should be the value you want to search for in the 'rollNo' column
       },
     });
-    console.log(studentMark);
+
     if (!studentMark) {
       return res
         .status(404)
