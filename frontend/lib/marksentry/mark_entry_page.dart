@@ -8,7 +8,7 @@ import 'package:frontend/controller/labelcontroller.dart';
 import 'package:frontend/controller/student_marks.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 
 class MarksEntryPage extends StatefulWidget {
   final bool isEdit;
@@ -48,7 +48,7 @@ class _MarksEntryPageState extends State<MarksEntryPage> {
   }
 
   Future<void> initializeState() async {
-    print("sadgs${studentmarkscontroller.isEditMarks.value}");
+
     for (int i = 1; i <= 40; i++) {
       String rollNumber = "COBB${i.toString().padLeft(2, '0')}";
       roll_no.add(rollNumber);

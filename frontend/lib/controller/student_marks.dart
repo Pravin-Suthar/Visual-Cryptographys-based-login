@@ -19,6 +19,8 @@ class StudentMarksController extends GetxController {
   RxBool isEditMarks = false.obs;
   RxBool isfetching = false.obs;
   RxList<Map<String, String>> allmarks = <Map<String, String>>[].obs;
+
+
   void getAllStudentMarks() async {
     isfetching.value = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,13 +28,12 @@ class StudentMarksController extends GetxController {
     int? examinerId = prefs.getInt('examinerid');
     try {
       http.Response res = await http.get(
-        Uri.parse('${getAllStudentsMarksUrl}/${examinerId}'),
+        Uri.parse('$getAllStudentsMarksUrl/$examinerId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
       var jsonData = jsonDecode(res.body);
-      print(jsonData);
       if (jsonData['success'] == true) {
         fetchedRowMarksEntry.value = jsonData['studentMark'];
         isfetching.value = false;
@@ -58,7 +59,7 @@ class StudentMarksController extends GetxController {
 
   // Function to create a student mark entry
   void createStudentMark() async {
-    print("object");
+
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? examinerId = prefs.getInt('examinerid');
@@ -67,11 +68,11 @@ class StudentMarksController extends GetxController {
       'rollNo': rollno.value,
       'course': course.value,
       'examType': examType.value,
-      'marks': allmarks.value,
+      'marks': allmarks,
     });
     try {
       http.Response res = await http.post(
-        Uri.parse('$createStudentMarkUrl/${examinerId}'),
+        Uri.parse('$createStudentMarkUrl/$examinerId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -122,7 +123,7 @@ class StudentMarksController extends GetxController {
       if (jsonData['success'] == true) {
         //  fetchedRowMarksEntry.value = jsonData['studentMark'];
         studentMark.value = jsonData['studentMark'];
-        print(studentMark);
+     
 
         course.value = studentMark['course'];
         examType.value = studentMark['examType'];
@@ -153,7 +154,7 @@ class StudentMarksController extends GetxController {
         'rollNo': rollno.value,
         'course': course.value,
         'examType': examType.value,
-        'marks': allmarks.value,
+        'marks': allmarks,
       });
       http.Response res = await http.patch(
         Uri.parse('${updateStudentMarkUrl}/${seletedStudentId.trim()}'),
@@ -163,7 +164,7 @@ class StudentMarksController extends GetxController {
         body: body,
       );
       var jsonData = jsonDecode(res.body);
-      print(jsonData);
+
       if (jsonData['success'] == true) {
         allmarks.clear();
 

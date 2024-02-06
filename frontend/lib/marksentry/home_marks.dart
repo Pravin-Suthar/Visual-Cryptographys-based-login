@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/common/design/customColors.dart';
 import 'package:frontend/common/design/fontStyle.dart';
-import 'package:frontend/common/waiting_screen.dart';
-import 'package:frontend/controller/labelcontroller.dart';
+
 import 'package:frontend/controller/student_marks.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/marksentry/mark_entry_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class StudentListPage extends StatefulWidget {
   @override
@@ -116,8 +114,6 @@ class _StudentListPageState extends State<StudentListPage> {
                                 return ListTile(
                                   title: Text('Roll No ${student["rollNo"]}'),
                                   onTap: () {
-                                    print(
-                                        "${studentMarksController.fetchedRowMarksEntry.value[index]['rollNo']}");
                                     studentMarksController
                                             .seletedStudentId.value =
                                         studentMarksController

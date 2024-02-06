@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/common/design/customColors.dart';
 import 'package:frontend/common/design/fontStyle.dart';
 import 'package:frontend/controller/dropdown_controller.dart';
@@ -26,8 +22,7 @@ class _DropdownCustomState extends State<DropdownCustom> {
   @override
   Widget build(BuildContext context) {
     List<String> dropdownItems = ['Male', 'Female', 'Other'];
-    int maxVisibleItems =
-        3; //Each item of height 42px so multiplning with a interger will give no of items
+
     return Obx(() {
       return Padding(
         padding: EdgeInsets.only(bottom: 20.h),

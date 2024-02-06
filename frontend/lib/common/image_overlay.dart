@@ -1,10 +1,10 @@
-import 'dart:ffi';
+
 import 'dart:io';
 import 'package:frontend/common/design/customColors.dart';
 import 'package:frontend/common/design/fontStyle.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
@@ -22,11 +22,18 @@ class _ImageOverlayPageState extends State<ImageOverlayPage> {
   bool isBottomImageMoved = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    examinerController.shouldAnimate.value = false;
+
+    examinerController.overlayedFileBytes.value = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(examinerController.shouldAnimate.value);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Overlay Page'),
-      ),
       body: Center(
         child: Obx(
           () => Column(
@@ -48,8 +55,10 @@ class _ImageOverlayPageState extends State<ImageOverlayPage> {
                     ),
                   if (examinerController.overlayedFileBytes.value != null)
                     AnimatedPositioned(
-                      top: 0,
-                      duration: Duration(milliseconds: 500),
+                      top: examinerController.shouldAnimate.value ? 0 : 300,
+                      duration: Duration(milliseconds: 800),
+                      curve: Curves
+                          .easeInOut, // Optional: Add a curve for smoother animation
                       child: Opacity(
                         opacity: 0.5,
                         child: SizedBox(
@@ -63,6 +72,7 @@ class _ImageOverlayPageState extends State<ImageOverlayPage> {
                     ),
                 ],
               ),
+              SizedBox(height: 20,),
               TextField(
                 enabled: true,
                 controller: examinerController.otpController,
@@ -71,29 +81,30 @@ class _ImageOverlayPageState extends State<ImageOverlayPage> {
                   fillColor:
                       Theme.of(context).extension<AppColors>()!.c12 as Color,
                   contentPadding: const EdgeInsets.only(bottom: 15, left: 10),
-                  hintText: "Otp",
+                  hintText: "Enter the Otp here",
                   hintStyle: CustomTextStyle.T4(context),
                 ),
               ),
-              
-               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary:
-                        Theme.of(context).extension<AppColors>()!.c1 as Color,
-                    backgroundColor:
-                        Theme.of(context).extension<AppColors>()!.c12 as Color,
-                  ),
-                 onPressed: () {
-                      examinerController.verifyOtp();
-                    },
-                  child: Text(
-                    'Verify',
-                    style: CustomTextStyle.T4(context),
-                  ),
-                
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary:
+                      Theme.of(context).extension<AppColors>()!.c1 as Color,
+                  backgroundColor:
+                      Theme.of(context).extension<AppColors>()!.c12 as Color,
+                ),
+                onPressed: () {
+                  examinerController.verifyOtp();
+                },
+                child: Text(
+                  'Verify Otp',
+                  style: CustomTextStyle.T4(context),
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
+                  // Reset the shouldAnimate flag to false before selecting a new image
+                  examinerController.shouldAnimate.value = false;
+
                   final Directory appCacheDir = await getTemporaryDirectory();
                   final String cacheDirectoryPath =
                       '${appCacheDir.path}/file_picker/';
@@ -117,19 +128,17 @@ class _ImageOverlayPageState extends State<ImageOverlayPage> {
                   );
 
                   if (result != null) {
+                    examinerController.shouldAnimate.value =
+                        true; // Set shouldAnimate to true after selecting a new image
                     PlatformFile file = result.files.first;
                     // Get the bytes of the selected file
-
                     List<int> fileBytes = await File(file.path!).readAsBytes();
-
                     // Update the overlayedFileBytes in the controller
                     examinerController.overlayedFileBytes.value =
                         Uint8List.fromList(fileBytes);
-
-                    //  print(                    examinerController.overlayedFileBytes.value );
                   }
                 },
-                child: Text('Select One More'),
+                child: Text('Select the share2 sent to registered email'),
               ),
             ],
           ),
