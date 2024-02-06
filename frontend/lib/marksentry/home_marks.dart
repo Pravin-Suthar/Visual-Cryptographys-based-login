@@ -37,21 +37,22 @@ class _StudentListPageState extends State<StudentListPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Confirm Exit'),
-                    content: Text('Are you sure you want to exit the app?'),
+                    title: const Text('Confirm Exit'),
+                    content:
+                        const Text('Are you sure you want to exit the app?'),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
                           Navigator.of(context)
                               .pop(false); // User does not want to exit
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                       TextButton(
                         onPressed: () {
                           Get.to(() => Homepage()); // User confirms exit
                         },
-                        child: Text('Exit'),
+                        child: const Text('Exit'),
                       ),
                     ],
                   );
@@ -73,7 +74,7 @@ class _StudentListPageState extends State<StudentListPage> {
                         Padding(
                           padding: EdgeInsets.only(top: 21.0.h, left: 17.0.w),
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -101,7 +102,7 @@ class _StudentListPageState extends State<StudentListPage> {
                         () {
                           if (studentMarksController
                               .fetchedRowMarksEntry.value.isEmpty) {
-                            return Center(
+                            return const Center(
                               child: Text('No students found'),
                             );
                           } else {
@@ -139,12 +140,12 @@ class _StudentListPageState extends State<StudentListPage> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   studentMarksController.isEditMarks.value = false;
-                  Future.delayed(Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 1), () {
                     Get.to(() => MarksEntryPage(
                         isEdit: studentMarksController.isEditMarks.value));
                   });
                 },
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               ),
             ),
           ),
