@@ -120,9 +120,9 @@ class StudentMarksController extends GetxController {
 
       var jsonData = jsonDecode(res.body);
 
-      if (jsonData['success'] == true) {
+            if (jsonData['success'] == true) {
         //  fetchedRowMarksEntry.value = jsonData['studentMark'];
-        studentMark.value = jsonData['studentMark'];
+         studentMark.value = jsonData['studentMark'];
      
 
         course.value = studentMark['course'];

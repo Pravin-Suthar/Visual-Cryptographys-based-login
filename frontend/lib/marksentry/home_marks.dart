@@ -92,7 +92,7 @@ class _StudentListPageState extends State<StudentListPage> {
                       ],
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.892,
+                      height: MediaQuery.of(context).size.height * 0.832,
                       width: double.infinity,
                       margin: const EdgeInsets.only(top: 21),
                       decoration: BoxDecoration(
