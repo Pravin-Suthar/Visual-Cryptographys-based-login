@@ -34,7 +34,7 @@ exports.createStudentMark = async (req, res) => {
     marks = JSON.stringify(marks);
 
     rollNo = rollNo;
-    marks = encryptData(marks);
+    marks = encryptData(JSON.stringify(marks));
     course = encryptData(course);
     examType = encryptData(examType);
 
