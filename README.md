@@ -1,4 +1,7 @@
-git@github.com:Pravin-Suthar/Visual-Cryptographys-based-login.gitDisclaimer
+
+
+Disclaimer
+
 The source code contained in this repository is the intellectual property of Pravin Suthar. Pravin Suthar is the original author and copyright holder of the code. By accessing this repository, you are granted a non-exclusive, worldwide, royalty-free license to use, modify, and distribute the code for personal and commercial purposes, provided that proper attribution is given to the original author. This license does not grant you any rights to use the author's name, logo, or trademarks without prior written consent.
 
 The code is provided "as-is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the author be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the code or the use or other dealings in the code.
@@ -93,9 +96,6 @@ Starting Backend:
 3. Adjust the credentials in the .env file according to your local MySQL database
 4. Here i have assumed you have a MYSQL server running locally and hence the first step will be create a database with name defined in the env of change the name in the env to one which you already have.
 5. To make life easier i am letting the smtp credential be in this email as the account is a dummy account.
-
-![alt text](image.png)
-
 6. Run the backend server by typing npm run server in the terminal.
 7. The server should now be running. Node.js version used: v20.11.0.
 
